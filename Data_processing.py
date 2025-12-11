@@ -3,7 +3,7 @@ import urllib.request
 import urllib.error
 from db import insert
 from matching_process import match
-
+from consecutive_analysis import find_consecutive
 
 """extracts the mishnayot and the citations"""
 def process_talmud_page(url):
@@ -123,13 +123,14 @@ def count_citations_per_mishna():
     for mishna_daf, count in results:
         print(f"Mishna {mishna_daf}: {count} citations")
 
+
 if __name__ == "__main__":
     url = input("Please enter the url\n")
     mishnayot, citations = process_talmud_page(url)
     match()
     print(f"Processing complete! Inserted {len(mishnayot)} mishnayot and {len(citations)} citations")
     count_citations_per_mishna()
-
+    find_consecutive()
    
          
   

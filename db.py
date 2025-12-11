@@ -18,6 +18,7 @@ creat_citations_table="""CREATE TABLE IF NOT EXISTS citations (
 creat_matched_table="""CREATE TABLE IF NOT EXISTS matched(
    id INT NOT NULL,
    mishna_daf CHAR(10) NOT NULL,
+   citation_id INT NOT NULL,
    citation_daf CHAR(10) NOT NULL
 );"""
 
@@ -30,8 +31,8 @@ def insert(table, id, daf, text):
     query = f"INSERT INTO {table} (id, daf, {'mishna' if table == 'mishnayot' else 'citation'}) VALUES (?, ?, ?)"
     cursor.execute(query, (id, daf, text))
     conn.commit()
-    
-def insert_match(id,daf_m,daf_c):
-    query = f"INSERT INTO matched (id, mishna_daf,citation_daf) VALUES (?, ?, ?)"
-    cursor.execute(query, (id, daf_m, daf_c))
+
+def insert_match(id,daf_m,c_id,daf_c):
+    query = f"INSERT INTO matched (id, mishna_daf,citation_id,citation_daf) VALUES (?, ?, ?, ?)"
+    cursor.execute(query, (id, daf_m,c_id,daf_c))
     conn.commit()
