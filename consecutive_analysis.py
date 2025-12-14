@@ -63,7 +63,7 @@ def find_consecutive():
                 curr=[(mishna, citation_text, cit_daf)]
     if len(curr)>=2:
         found_consecutive.append(curr)
-        
+
     for i in found_consecutive:
         print(i)
     print(f"found {len(found_consecutive)} instances where a Mishna is cited consecutively in Bava Batra")

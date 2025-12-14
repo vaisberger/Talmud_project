@@ -4,7 +4,7 @@ import urllib.error
 from db import insert
 from matching_process import match
 from consecutive_analysis import find_consecutive
-
+import os
 """extracts the mishnayot and the citations"""
 def process_talmud_page(url):
     mishnayot = []  
@@ -44,8 +44,11 @@ def process_talmud_page(url):
                 citation += line[dot_mark+1:].strip() + "\n"
                 found_dot = True
             continue
+       
         
         if gemara and not (line.strip().startswith("<big><strong>מתני׳</strong></big>") or line.strip().startswith("מתני׳ <big><strong>") or line.strip().startswith("<big><strong>מתני'</strong></big>")): 
+            if "<strong>הדרן עלך" in line.strip():
+                found_dot=False 
             if found_dot:
                 if ":" in line:
                     end = line.index(":")
@@ -129,9 +132,9 @@ if __name__ == "__main__":
     mishnayot, citations = process_talmud_page(url)
     match()
     print(f"Processing complete! Inserted {len(mishnayot)} mishnayot and {len(citations)} citations")
-    count_citations_per_mishna()
+    #count_citations_per_mishna()
     find_consecutive()
-   
+ 
          
   
 
