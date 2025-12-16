@@ -25,8 +25,10 @@ def process_talmud_page(url):
     gemara = False
     index1 = 0
     index2 = 0
+    lines = raw_data.split('\n')
+    masechet= lines[0].strip()
     
-    for line in raw_data.split('\n'):
+    for line in lines:
         # Extract daf number
         if "Daf" in line:
             daf = line.split(' ')[1]
@@ -54,7 +56,7 @@ def process_talmud_page(url):
                     end = line.index(":")
                     citation += line[:end].strip() + "\n" 
                     index1 += 1
-                    insert('citations', index1, daf, citation)
+                    insert(masechet,'citations', index1, daf, citation)
                     citations.append({"index": index1, "daf": daf, "citation": citation})
                     citation = ""
                     found_dot = False
@@ -90,7 +92,7 @@ def process_talmud_page(url):
                 end = remaining_text.index(":")
                 mishna += remaining_text[:end] + "\n"
                 index2 += 1
-                insert('mishnayot', index2, daf, mishna)
+                insert(masechet,'mishnayot', index2, daf, mishna)
                 mishnayot.append({"index": index2, "daf": daf, "mishna": mishna})
                 mishna = ""
             else:
@@ -104,35 +106,20 @@ def process_talmud_page(url):
                 end = line.index(":")
                 mishna += line[:end] + "\n"
                 index2 += 1
-                insert('mishnayot', index2, daf, mishna)
+                insert(masechet,'mishnayot', index2, daf, mishna)
                 mishnayot.append({"index": index2, "daf": daf, "mishna": mishna})
                 mishna = ""
             else:
                 mishna += line.strip() + '\n'
-    
+
+    print(f"{masechet}")
     return mishnayot, citations
-
-"""Counts for each mishna how many times we found it in the gemara"""
-def count_citations_per_mishna():
-    conn = sqlite3.connect('mishnayot.db')
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT mishna_daf, COUNT(*) as citation_count
-        FROM matched
-        GROUP BY mishna_daf
-        ORDER BY mishna_daf
-    """)
-    results = cursor.fetchall()
-    for mishna_daf, count in results:
-        print(f"Mishna {mishna_daf}: {count} citations")
-
 
 if __name__ == "__main__":
     url = input("Please enter the url\n")
     mishnayot, citations = process_talmud_page(url)
     match()
     print(f"Processing complete! Inserted {len(mishnayot)} mishnayot and {len(citations)} citations")
-    #count_citations_per_mishna()
     find_consecutive()
  
          

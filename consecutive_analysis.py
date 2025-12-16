@@ -10,19 +10,19 @@ def check_similar_citations(text1, text2):
           return True
          
         # Removes וכו' 
-        if t1.endswith('וכו'):
-          t1 = t1[:-3].strip()  
+        if t1.endswith("וכו'"):
+          t1 = t1[:-4].strip()  
 
-        if t2.endswith('וכו'):
-          t2 = t2[:-3].strip() 
+        if t2.endswith("וכו'"):
+          t2 = t2[:-4].strip()
         
         # one contains the other
         if t1 in t2 or t2 in t1:
            longer = max(len(t1), len(t2))
            shorter = min(len(t1), len(t2))
 
-        # if length difference is small (within 20%)
-           if shorter / longer >= 0.8:
+        # if length difference is small (within 40%)
+           if shorter / longer >= 0.6:
               return True
 
         return False
@@ -34,33 +34,34 @@ def find_consecutive():
     
     # Get all matched citations for mishnayot that have 2+ citations
     cursor.execute("""
-    SELECT m.mishna_daf, m.citation_id, m.citation_daf, c.citation
-    FROM matched m
-    JOIN citations c ON m.citation_id = c.id
-    WHERE m.mishna_daf IN (
-        SELECT mishna_daf 
+      SELECT m.masechet, m.mishna_daf, m.citation_id, m.citation_daf, c.citation
+      FROM matched m
+      JOIN citations c ON m.citation_id = c.id AND m.masechet = c.masechet
+      WHERE (m.masechet, m.mishna_daf) IN (
+        SELECT masechet, mishna_daf 
         FROM matched 
-        GROUP BY mishna_daf 
+        GROUP BY masechet, mishna_daf 
         HAVING COUNT(*) > 1
-    )
-    ORDER BY m.citation_id
+     )
+     ORDER BY m.masechet, m.citation_id
     """)
     rows = cursor.fetchall()
 
     found_consecutive = []
     curr=[]
 
-    for i, (mishna, cit_id, cit_daf, citation_text) in enumerate(rows):
+    for i, (masechet,mishna, cit_id, cit_daf, citation_text) in enumerate(rows):
         if i==0:
             curr.append((mishna,citation_text,cit_daf))
         else:
-            prev_mishna,prev_id,prev_cit_daf,prev_text= rows[i-1]
+          if masechet==rows[i-1][0]:
+            prev_masechet,prev_mishna,prev_id,prev_cit_daf,prev_text= rows[i-1]
             if prev_mishna==mishna and prev_id+1==cit_id and check_similar_citations(prev_text,citation_text):
-                curr.append((mishna,citation_text,cit_daf))
+                curr.append((masechet,mishna,citation_text,cit_daf))
             else:
                 if len(curr)>=2:
                     found_consecutive.append(curr)
-                curr=[(mishna, citation_text, cit_daf)]
+                curr=[(masechet,mishna, citation_text, cit_daf)]
     if len(curr)>=2:
         found_consecutive.append(curr)
 

@@ -22,26 +22,27 @@ def match():
   cursor = conn.cursor()
 
   def get_all_mishnayot():
-    cursor.execute("SELECT id, daf, mishna FROM mishnayot")
+    cursor.execute("SELECT id, masechet, daf, mishna FROM mishnayot")
     return cursor.fetchall()
 
   def get_all_citations():
-    cursor.execute("SELECT id, daf, citation FROM citations")
+    cursor.execute("SELECT id, masechet, daf, citation FROM citations")
     return cursor.fetchall()
 
   mishnayot=get_all_mishnayot()
   citations=get_all_citations()
   index=0
   matched_count = 0
-  for citation_id, citation_daf, citation_text in citations:  
+  for citation_id, masechet_c, citation_daf, citation_text in citations: 
        citation=' '.join(citation_text.split())
-       for mishna_id, mishna_daf, mishna_text in mishnayot:
+       for mishna_id, masechet_m, mishna_daf, mishna_text in mishnayot:
          mishna=' '.join(mishna_text.split())
-         sub_s=longest_common_substring(mishna,citation,2)
-         if sub_s >= 2: 
+         if masechet_m==masechet_c:
+          sub_s=longest_common_substring(mishna,citation,2)
+          if sub_s >= 2: 
             index+=1
             matched_count+=1
-            insert_match(index,mishna_daf,citation_id,citation_daf)
+            insert_match(index,masechet_c,mishna_daf,citation_id,citation_daf)
             break
             
   print(f"\nTotal matches: {matched_count} out of {len(citations)} citations")
