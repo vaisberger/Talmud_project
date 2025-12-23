@@ -1,6 +1,6 @@
 import sqlite3
 from matching_process import longest_common_substring
-
+import Levenshtein
 """comparing 2 consecutive citations with few tests"""
 def check_similar_citations(text1, text2):
         t1 = text1.strip()
@@ -26,6 +26,17 @@ def check_similar_citations(text1, text2):
               return True
 
         return False
+
+def levenshtein_dis(text_1,text_2):
+ t1 = text_1.strip()
+ t2 = text_2.strip()
+ distance = Levenshtein.distance(t1, t2)
+ if distance <= 1:
+    print(f"Match found! Distance: {distance}")
+    return True
+ if t1 in t2 or t2 in t1:
+       return True
+ return False
 
 def find_consecutive():
 
@@ -56,7 +67,7 @@ def find_consecutive():
         else:
           if masechet==rows[i-1][0]:
             prev_masechet,prev_mishna,prev_id,prev_cit_daf,prev_text= rows[i-1]
-            if prev_mishna==mishna and prev_id+1==cit_id and check_similar_citations(prev_text,citation_text):
+            if prev_mishna==mishna and prev_id+1==cit_id and levenshtein_dis(prev_text,citation_text): #and check_similar_citations(prev_text,citation_text):
                 curr.append((masechet,mishna,citation_text,cit_daf))
             else:
                 if len(curr)>=2:
@@ -67,4 +78,4 @@ def find_consecutive():
 
     for i in found_consecutive:
         print(i)
-    print(f"found {len(found_consecutive)} instances where a Mishna is cited consecutively in Bava Batra")
+    print(f"found {len(curr)} instances where a Mishna is cited consecutively in the shas")

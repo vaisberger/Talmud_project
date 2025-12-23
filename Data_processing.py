@@ -116,10 +116,10 @@ def process_talmud_page(url):
     return mishnayot, citations
 
 if __name__ == "__main__":
-    url = input("Please enter the url\n")
-    mishnayot, citations = process_talmud_page(url)
-    match()
-    print(f"Processing complete! Inserted {len(mishnayot)} mishnayot and {len(citations)} citations")
+    #url = input("Please enter the url\n")
+    #mishnayot, citations = process_talmud_page(url)
+    #match()
+    #print(f"Processing complete! Inserted {len(mishnayot)} mishnayot and {len(citations)} citations")
     find_consecutive()
  
          
