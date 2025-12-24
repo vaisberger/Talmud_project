@@ -27,6 +27,7 @@ def check_similar_citations(text1, text2):
 
         return False
 
+"""comparing 2 consecutive citations using levenshtein distance"""
 def levenshtein_dis(text_1,text_2):
  t1 = text_1.strip()
  t2 = text_2.strip()
@@ -37,6 +38,7 @@ def levenshtein_dis(text_1,text_2):
  if t1 in t2 or t2 in t1:
        return True
  return False
+
 
 def find_consecutive():
 
@@ -60,14 +62,15 @@ def find_consecutive():
 
     found_consecutive = []
     curr=[]
-
+    
+    #For each consecutive citations finds the ones that are the same 
     for i, (masechet,mishna, cit_id, cit_daf, citation_text) in enumerate(rows):
         if i==0:
             curr.append((mishna,citation_text,cit_daf))
         else:
           if masechet==rows[i-1][0]:
-            prev_masechet,prev_mishna,prev_id,prev_cit_daf,prev_text= rows[i-1]
-            if prev_mishna==mishna and prev_id+1==cit_id and levenshtein_dis(prev_text,citation_text): #and check_similar_citations(prev_text,citation_text):
+            prev_masechet,prev_mishna,prev_id,prev_cit_daf,prev_text= rows[i-1]  
+            if prev_masechet==masechet and prev_id+1==cit_id and check_similar_citations(prev_text,citation_text): #and check_similar_citations(prev_text,citation_text):
                 curr.append((masechet,mishna,citation_text,cit_daf))
             else:
                 if len(curr)>=2:
@@ -78,4 +81,4 @@ def find_consecutive():
 
     for i in found_consecutive:
         print(i)
-    print(f"found {len(curr)} instances where a Mishna is cited consecutively in the shas")
+    print(f"found {len(found_consecutive)} instances where a Mishna is cited consecutively in the shas")
