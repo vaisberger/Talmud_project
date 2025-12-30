@@ -6,8 +6,6 @@ from consecutive_analysis import find_consecutive
 import os
 """extracts the mishnayot and the citations"""
 def process_talmud_page(url):
-    mishnayot = []  
-    citations = []
     mishna = ""
     citation = ""
     daf = ""
@@ -50,6 +48,7 @@ def process_talmud_page(url):
         if gemara and not (line.strip().startswith("<big><strong>מתני׳</strong></big>") 
                            or line.strip().startswith("מתני׳ <big><strong>") 
                            or line.strip().startswith("<big><strong>מתני'</strong></big>")): 
+            # End of a chapter
             if "<strong>הדרן עלך" in line.strip():
                 found_colon =False 
             if not found_colon :
@@ -67,7 +66,6 @@ def process_talmud_page(url):
                     citation = remaining[:end].strip() + "\n"
                     index1 += 1
                     insert(masechet, 'citations', index1, daf, citation)
-                    citations.append({"index": index1, "daf": daf, "citation": citation})
                     citation = ""
                     found_colon  = False
                    endofline=remaining[end+1:]
@@ -86,7 +84,6 @@ def process_talmud_page(url):
                 citation += line[:end].strip() + "\n"
                 index1 += 1
                 insert(masechet, 'citations', index1, daf, citation)
-                citations.append({"index": index1, "daf": daf, "citation": citation})
                 citation = ""
                 found_colon  = False
             
@@ -104,7 +101,6 @@ def process_talmud_page(url):
                     citation = after_start[:next_end].strip() + "\n"
                     index1 += 1
                     insert(masechet, 'citations', index1, daf, citation)
-                    citations.append({"index": index1, "daf": daf, "citation": citation})
                     citation = ""
                     found_colon  = False
                     if ":" in after_start[next_end+1:] and ":)" not in after_start[next_end+1:]:
@@ -130,7 +126,6 @@ def process_talmud_page(url):
                 mishna += remaining_text[:end] + "\n"
                 index2 += 1
                 insert(masechet,'mishnayot', index2, daf, mishna)
-                mishnayot.append({"index": index2, "daf": daf, "mishna": mishna})
                 mishna = ""
             else:
                 mishna_start = True
@@ -144,7 +139,6 @@ def process_talmud_page(url):
                 mishna += line[:end] + "\n"
                 index2 += 1
                 insert(masechet,'mishnayot', index2, daf, mishna)
-                mishnayot.append({"index": index2, "daf": daf, "mishna": mishna})
                 mishna = ""
             else:
                 mishna += line.strip() + '\n'
