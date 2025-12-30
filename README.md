@@ -12,14 +12,15 @@ Answer the question: "How often is a Mishna citation consecutively repeated in t
 - The citation texts are nearly identical (with minor differences like the suffix "וכו")
 
 ### Current Results 
-Using a **40% similarity threshold**, we found **6 instances** across Shas where Mishnayot are cited consecutively:
+Using a **40% similarity threshold**, we found **7 instances** across Shas where Mishnayot are cited consecutively:
 
 1. **Bava Batra 42a** - cited on 49a and 50b 
-2. **Berakhot 51b** - cited on 52a and 52b 
-3. **Ketubot 22a** - cited on 23a 
-4. **Sanhedrin 40a** - cited on 42a
-5. **Shabbat 142b** - cited on same page 
-6. **Yevamot 25a** - cited on 119a and 119b
+2. **Bava Batra 68b** - cited on 69a (twice consecutively)
+3. **Berakhot 51b** - cited on 52a and 52b 
+4. **Ketubot 22a** - cited on 23a 
+5. **Sanhedrin 40a** - cited on 42a
+6. **Shabbat 142b** - cited on same page 
+7. **Yevamot 25a** - cited on 119a and 119b
 
 ## Project Structure
 ```
@@ -55,26 +56,42 @@ TALMUD_PROJECT/
    * `citation_daf`: Location of the citation in Gemara
 
 ## How It Works
-### Step 1: Extract Citations
+
+### Step 1: Extract Citations and Mishnayot
 * Parse Talmud text files from Sefaria
 * Extract Mishna texts (marked with `<big><strong>מתני׳</strong></big>`)
 * Extract citation texts (text between colons in the Gemara)
 * Store in SQLite database
 
 ### Step 2: Match Citations to Mishnayot
-* Use **longest common substring algorithm** to match citations to source Mishnayot
-* Minimum threshold: **2 consecutive matching words**
-* Only matches within the same tractate (masechet)
+The matching algorithm uses a **hybrid approach** combining two metrics to identify which Mishna a citation is quoting from:
+
+1. **Longest Common Substring**: Finds the longest sequence of consecutive matching words
+   * Minimum threshold: **2 consecutive matching words**
+   
+2. **Token Overlap Score**: Measures how many words from the citation appear in the Mishna
+   ```python
+   token_overlap_score = (shared_words) / (total_citation_words)
+   ```
+   * Minimum threshold: **50% overlap**
+
+**Matching Criteria**:
+A citation is matched to a source Mishna if:
+* Longest common substring ≥ 2 words **AND**
+* Token overlap score > 0.5 (50% of citation words appear in Mishna)
+* Both texts are from the same tractate (masechet)
+
+This hybrid approach ensures citations are matched only when they have both:
+- Consecutive word sequences (meaningful phrases from the Mishna)
+- Sufficient overall word overlap (not just a short coincidental match)
 
 ### Step 3: Find Consecutive Citations
 1. Query all Mishnayot that have 2+ citations
 2. For each Mishna with multiple citations:
    * Check if citation IDs are consecutive (differ by 1)
-   * Check if citations are on consecutive or nearby pages
    * Apply similarity check using `check_similar_citations()`
 3. Group consecutive similar citations together
 
-### Step 4: Similarity Algorithm
 Citations are considered similar if:
 
 1. **Exact match**: Texts are identical after stripping whitespace
@@ -99,14 +116,40 @@ Citations are considered similar if:
 [('Bava Batra', '42a', "ולא לאיש חזקה בנכסי אשתו וכו'\n", '49a'), 
  ('Bava Batra', '42a', 'ולא לאיש חזקה בנכסי אשתו\n', '50b')]
 
-found 6 instances where a Mishna is cited consecutively in the shas
+[('Bava Batra', '68b', '(ולא את חרוב המורכב ולא סדן השקמה\n', '69a'), 
+ ('Bava Batra', '68b', "ולא את חרוב המורכב ולא סדן השקמה וכו'\n", '69a')]
+
+found 7 instances where a Mishna is cited consecutively in the shas
 ```
+
+## Development History
+
+### Matching Algorithm Evolution (Step 2: Citations → Mishnayot)
+1. **Initial approach**: Longest common substring only
+   * Simple but sometimes matched unrelated texts with short common phrases
+   
+2. **Current approach**: Hybrid token overlap + longest common substring
+   * Combines phrase-level matching with overall word coverage
+   * More accurate matching of citations to source Mishnayot
+
+### Citation Comparison Evolution (Step 4: Comparing Citations)
+1. **Initial approach**: Simple substring matching with length threshold
+   * Used 40% similarity threshold
+   
+2. **Levenshtein distance attempt**: Measured character-level edit distance between citations
+   * **Conclusion**: Not suitable for this purpose
+   * Character-level differences don't capture semantic similarity well for citation comparison
+   
+3. **Back to refined substring approach**: 
+   * Kept the substring + length threshold method (40%)
+   * Proved more effective than Levenshtein for comparing similar citations
 
 ## Current Status
 -  Completed analysis of Bava Batra
--  Currently expanding analysis to entire Shas
--  Next: Implement fuzzy matching using Levenshtein distance
--  Future: Complete analysis of all shas with Levenshtein distance
+-  Expanded analysis to entire Shas
+-  Tested Levenshtein distance (determined unsuitable)
+-  Implemented token overlap scoring for improved matching citation to mishna accuracy
+-  Final results validation in progress
 
 ## Requirements
 ```
@@ -115,7 +158,8 @@ sqlite3
 ```
 
 ## Data Source
-Talmud text from: https://raw.githubusercontent.com/Sefaria/Sefaria-Export/master/txt/Talmud/Bavli/Seder%20Nezikin/Bava%20Batra/Hebrew/Wikisource%20Talmud%20Bavli.txt
+Talmud text from Sefaria:
+`https://raw.githubusercontent.com/Sefaria/Sefaria-Export/master/txt/Talmud/Bavli/`
 
 ## Author
 Yael Novick
