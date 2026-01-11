@@ -151,6 +151,18 @@ found 7 instances where a Mishna is cited consecutively in the shas
 -  Implemented token overlap scoring for improved matching citation to mishna accuracy
 -  Final results validation in progress
 
+## Next Step: AI-Assisted Reimplementation
+
+The next phase of this project is to reimplement the system using Cursor (AI-assisted development).
+
+Since the expected results and validation criteria are already known, this phase focuses on:
+- Evaluating AI-assisted development workflows in a controlled setting
+- Comparing AI-generated code with the original implementation
+- Improving structure, readability, and maintainability
+- Strengthening unit tests and validation logic
+
+This allows direct comparison between the original and AI-assisted implementations while maintaining result correctness.
+
 ## Requirements
 ```
 Python 3.x
