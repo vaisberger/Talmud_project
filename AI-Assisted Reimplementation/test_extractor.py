@@ -123,6 +123,18 @@ class TestCitationExtractionEdgeCases(unittest.TestCase):
             citations,
             ["First citation\nspans lines", "Second citation\nalso spans"]
         )
+       
+    def test_citation_not_across_daf(self):
+      text = (
+        "<big><strong>גמ׳</strong></big>\n"
+        "Text:This is citation part 1\n"
+        "Daf 160a\n"
+        "Text:This is not a citation"
+       )
+
+      _, citations = extract_mishnayot_and_citations(text)
+      self.assertEqual(citations, [])
+
 
 
 class TestIntegration(unittest.TestCase):

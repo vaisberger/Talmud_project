@@ -71,6 +71,19 @@ def extract_mishnayot_and_citations(text: str):
                     skip_next_colon = True
                     k += len("<strong>הדרן עלך")
                     continue
+
+                # Detect Daf boundary (line with only 'Daf')
+                if gemara_text.startswith("Daf", k) and (k == 0 or gemara_text[k-1] == "\n"):
+                 # If a citation was in progress, abandon it (citations cannot span daf)
+                    inside_citation = False
+                    current = []
+
+                # Skip to next line
+                    next_newline = gemara_text.find("\n", k)
+                    if next_newline == -1:
+                       break
+                    k = next_newline + 1
+                    continue
                     
 
                 char = gemara_text[k]
