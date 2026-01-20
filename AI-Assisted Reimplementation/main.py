@@ -2,6 +2,8 @@
 import requests
 import json
 from extractor import extract_mishnayot_and_citations
+from match_consecutive import match_citations
+
 
 EXTRACTION_FILE = "all_extracted.json"
 
@@ -80,11 +82,15 @@ def process_urls(url_list):
 if __name__ == "__main__":
     urls = [
         "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/master/txt/Talmud/Bavli/Seder%20Nezikin/Bava%20Batra/Hebrew/Wikisource%20Talmud%20Bavli.txt",
-      
     ]
 
     manager = process_urls(urls)
 
-    # Example: access all citations
-    all_citations = manager.get_all_citations()
-    print(f"Total citations collected: {len(all_citations)}")
+    # MATCH citations to mishnayot
+    match_citations(manager)
+
+    # Save updated structure
+    manager.save()
+
+    print(f"Unmatched citations: {len(manager.unmatched_citations)}")
+
