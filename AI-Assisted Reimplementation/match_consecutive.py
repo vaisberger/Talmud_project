@@ -17,6 +17,9 @@ FINAL_LETTERS = {
     "ץ": "צ",
 }
 
+def clean_text_for_matching(text):
+    return re.sub(r"^[^\u05D0-\u05EA]*|[^\u05D0-\u05EA]*$", "", text)
+
 def normalize_hebrew(text: str) -> str:
     text = re.sub(r"<[^>]+>", " ", text)              # HTML
     text = re.sub(r"[\u0591-\u05C7]", "", text)       # niqqud
@@ -51,19 +54,24 @@ def longest_consecutive_match(c_tokens, m_tokens) -> int:
 
 
 def similarity_score(citation_text: str, mishna_text: str) -> float:
-    c_tokens = normalize_hebrew(citation_text).split()
+    c_tokens = normalize_hebrew(clean_text_for_matching(citation_text)).split()
     m_tokens = normalize_hebrew(mishna_text).split()
-
-    if len(c_tokens) < 3:
+    
+    if len(c_tokens) < 2:  # allow very short fragments
         return 0.0
 
+    # longest consecutive match
     longest_run = longest_consecutive_match(c_tokens, m_tokens)
     sequence_score = longest_run / len(c_tokens)
 
+    # overlap score (set-based)
     overlap = len(set(c_tokens) & set(m_tokens))
     overlap_score = overlap / len(c_tokens)
 
-    return 0.7 * sequence_score + 0.3 * overlap_score
+    # weighted combination
+    return 0.2 * sequence_score + 0.8 * overlap_score
+
+
 
 
 # ---------------------------
@@ -99,3 +107,48 @@ def match_citations(manager, threshold: float = 0.6):
             unmatched.append(citation["id"])
 
     manager.unmatched_citations = unmatched
+
+def find_consecutive_similar_citations(manager, threshold: float = 0.8):
+    """
+    Finds sequences of consecutive citations that are very similar and linked to the same mishna.
+    """
+
+    consecutive_groups = []
+
+    # Only matched citations, sorted by ID
+    matched = sorted(
+        [c for c in manager.citations if c.get("matched_mishna_id")],
+        key=lambda x: x["id"]
+    )
+
+    current_group = []
+
+    for citation in matched:
+        if not current_group:
+            current_group.append(citation)
+            continue
+
+        prev = current_group[-1]
+
+        # 1. same mishna
+        same_mishna = citation["matched_mishna_id"] == prev["matched_mishna_id"]
+
+        # 2. consecutive in index
+        consecutive = citation["id"] == prev["id"] + 1
+
+        # 3. similar text
+        similar = similarity_score(citation["text"], prev["text"]) >= threshold
+
+        if same_mishna and consecutive and similar:
+            current_group.append(citation)
+        else:
+            if len(current_group) >= 2:
+                consecutive_groups.append([c["id"] for c in current_group])
+            current_group = [citation]
+
+    if len(current_group) >= 2:
+        consecutive_groups.append([c["id"] for c in current_group])
+
+    return consecutive_groups
+
+

@@ -1,14 +1,30 @@
 import re
 
+def strip_mishna_marker(line: str) -> str:
+    for marker in (
+        "<big><strong>מתני׳</strong></big>",
+        "מתני׳ <big><strong>",
+        "<big><strong>מתני'</strong></big>",
+    ):
+        if line.startswith(marker):
+            return line[len(marker):].strip()
+    return line.strip()
+
+
 def extract_mishnayot_and_citations(text: str):
     mishnayot = []
     citations = []
-
+    daf="1a"
+    masechet=""
     lines = text.splitlines()
     i = 0
 
     while i < len(lines):
         line = lines[i].strip()
+        if line.startswith("Daf"):
+           daf=line[len("Daf"):]
+        if i==0:
+           masechet=line.strip()
 
         # -------------------
         # MISHNA EXTRACTION
@@ -18,7 +34,10 @@ def extract_mishnayot_and_citations(text: str):
             line.startswith("מתני׳ <big><strong>") or
             line.startswith("<big><strong>מתני'</strong></big>")
         ):
-            mishna_lines = [line]
+               # REMOVE the marker from the first line
+            first_line = strip_mishna_marker(line)
+            mishna_lines = [first_line] if first_line else []
+            
             colon_found = ":" in line
             j = i + 1
 
@@ -31,7 +50,7 @@ def extract_mishnayot_and_citations(text: str):
             full_text = " ".join(mishna_lines)
             first_colon_index = full_text.find(":")
             if first_colon_index != -1:
-                mishnayot.append(full_text[:first_colon_index].strip())
+                mishnayot.append({"text":full_text[:first_colon_index].strip(),"daf":daf})
 
             i = j
             continue
@@ -59,77 +78,77 @@ def extract_mishnayot_and_citations(text: str):
             # -------- FIXED CITATION PARSER (STATE MACHINE) --------
             inside_citation = False
             current = []
+            paren_level = 0
             skip_next_colon = False
-
             k = 0
             length = len(gemara_text)
 
             while k < length:
+                char = gemara_text[k]
 
-                # Detect chapter-end marker
+                # Track parentheses
+                if char == "(":
+                    paren_level += 1
+                elif char == ")":
+                    if paren_level > 0:
+                        paren_level -= 1
+
+                # Handle chapter-end markers
                 if gemara_text.startswith("<strong>הדרן עלך", k):
                     skip_next_colon = True
                     k += len("<strong>הדרן עלך")
                     continue
 
-                # Detect Daf boundary (line with only 'Daf')
+                # Handle Daf boundaries (abandon ongoing citations)
                 if gemara_text.startswith("Daf", k) and (k == 0 or gemara_text[k-1] == "\n"):
-                 # If a citation was in progress, abandon it (citations cannot span daf)
                     inside_citation = False
                     current = []
-
-                # Skip to next line
                     next_newline = gemara_text.find("\n", k)
                     if next_newline == -1:
-                       break
+                        break
                     k = next_newline + 1
                     continue
-                    
 
-                char = gemara_text[k]
-
+                # Handle colons
                 if char == ":":
-                    # Ignore exactly ONE colon after chapter-end
                     if skip_next_colon:
                         skip_next_colon = False
                         k += 1
                         continue
-                        
 
-                    if not inside_citation:
+                    # Start citation only if not inside parentheses
+                    if not inside_citation and paren_level == 0:
                         inside_citation = True
                         current = []
-                    else:
+                    # End citation anywhere
+                    elif inside_citation:
                         citation = "".join(current).strip()
                         if citation:
-                            citation = "\n".join(
-                                line.strip() for line in citation.splitlines()
-                            )
-                            citations.append(citation)
-
+                            citation = "\n".join(line.strip() for line in citation.splitlines())
+                            citations.append({"text":citation,"daf": daf})
                         inside_citation = False
                         current = []
 
                     k += 1
                     continue
 
+                # Add characters to current citation
                 if inside_citation:
                     current.append(char)
 
                 k += 1
-            # ------------------------------------------------------
-# CLOSE citation if gemara ends while inside one
+
+            # Close citation if Gemara ends while inside one
             if inside_citation:
-             citation = "".join(current).strip()
-             if citation:
-                citation = "\n".join(
-                  line.strip() for line in citation.splitlines()
-                   )
-                citations.append(citation)
+                citation = "".join(current).strip()
+                if citation:
+                    citation = "\n".join(line.strip() for line in citation.splitlines())
+                    citations.append({"text":citation,"daf": daf})
 
             i = j
             continue
 
         i += 1
 
-    return mishnayot, citations
+    return mishnayot, citations, masechet
+

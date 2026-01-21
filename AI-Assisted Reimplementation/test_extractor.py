@@ -129,11 +129,28 @@ class TestCitationExtractionEdgeCases(unittest.TestCase):
         "<big><strong>גמ׳</strong></big>\n"
         "Text:This is citation part 1\n"
         "Daf 160a\n"
-        "Text:This is not a citation"
+        "Text:citation:"
        )
 
       _, citations = extract_mishnayot_and_citations(text)
-      self.assertEqual(citations, [])
+      self.assertEqual(citations, ["citation"])
+
+    def test_colon_inside_parentheses_not_new_citation(self):
+     text = textwrap.dedent("""\
+        <big><strong>גמ׳</strong></big>
+        :(citation1: more text:)
+        text:citation2:""")
+    
+     _, citations = extract_mishnayot_and_citations(text)
+    
+    # הציטוטים האמיתיים בלבד
+     self.assertEqual(
+        citations,
+        [
+          "(citation1",
+          "citation2"
+        ]
+     )
 
 
 
