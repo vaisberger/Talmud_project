@@ -85,7 +85,16 @@ def extract_mishnayot_and_citations(text: str):
 
             while k < length:
                 char = gemara_text[k]
-
+                if gemara_text.startswith("Daf", k) and (k == 0 or gemara_text[k-1] == "\n"):
+                   # extract full daf line
+                   end = gemara_text.find("\n", k)
+                   if end == -1:
+                     end = length
+                   daf = gemara_text[k+3:end].strip()  # skip "Daf"
+                   k = end + 1
+                   inside_citation = False
+                   current = []
+                   continue
                 # Track parentheses
                 if char == "(":
                     paren_level += 1

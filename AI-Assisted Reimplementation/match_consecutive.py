@@ -37,7 +37,7 @@ def normalize_hebrew(text: str) -> str:
 # ---------------------------
 # Matching logic
 # ---------------------------
-
+#longest common string with the text being tokenized
 def longest_consecutive_match(c_tokens, m_tokens) -> int:
     max_run = 0
     for i in range(len(c_tokens)):
@@ -51,25 +51,35 @@ def longest_consecutive_match(c_tokens, m_tokens) -> int:
                 k += 1
             max_run = max(max_run, k)
     return max_run
+#spliting the mishna into windows the len of the citation and finding the best window 
+def window_overlap_score(c_tokens, m_tokens):
+    if len(c_tokens) > len(m_tokens):
+        return 0
+
+    best = 0
+    for i in range(len(m_tokens) - len(c_tokens) + 1):
+        window = m_tokens[i:i+len(c_tokens)]
+        common = len(set(window) & set(c_tokens))
+        score = common / len(c_tokens)
+        best = max(best, score)
+
+    return best
 
 
-def similarity_score(citation_text: str, mishna_text: str) -> float:
+#combin both algorithems and calculates probabilistic OR
+def similarity_score(citation_text, mishna_text):
     c_tokens = normalize_hebrew(clean_text_for_matching(citation_text)).split()
-    m_tokens = normalize_hebrew(mishna_text).split()
-    
-    if len(c_tokens) < 2:  # allow very short fragments
+    m_tokens = normalize_hebrew(clean_text_for_matching(mishna_text)).split()
+
+    if len(c_tokens) < 2:
         return 0.0
 
-    # longest consecutive match
-    longest_run = longest_consecutive_match(c_tokens, m_tokens)
-    sequence_score = longest_run / len(c_tokens)
+    overlap = window_overlap_score(c_tokens, m_tokens)
+    longest = longest_consecutive_match(c_tokens, m_tokens) / len(c_tokens)
 
-    # overlap score (set-based)
-    overlap = len(set(c_tokens) & set(m_tokens))
-    overlap_score = overlap / len(c_tokens)
+    return 1 - (1-overlap)*(1-longest)
 
-    # weighted combination
-    return 0.2 * sequence_score + 0.8 * overlap_score
+
 
 
 
@@ -78,7 +88,7 @@ def similarity_score(citation_text: str, mishna_text: str) -> float:
 # Public API
 # ---------------------------
 
-def match_citations(manager, threshold: float = 0.6):
+def match_citations(manager, threshold = 0.55):
     """
     Mutates manager.mishnayot and manager.citations in-place.
     """
@@ -94,8 +104,9 @@ def match_citations(manager, threshold: float = 0.6):
         best_mishna = None
 
         for mishna in manager.mishnayot:
-            score = similarity_score(citation["text"], mishna["text"])
-            if score > best_score:
+            if mishna["masechet"]==citation["masechet"]:
+             score = similarity_score(citation["text"], mishna["text"])
+             if score > best_score:
                 best_score = score
                 best_mishna = mishna
 
@@ -136,6 +147,8 @@ def find_consecutive_similar_citations(manager, threshold: float = 0.8):
         # 2. consecutive in index
         consecutive = citation["id"] == prev["id"] + 1
 
+        if citation["id"]==3461:
+                print("hi")
         # 3. similar text
         similar = similarity_score(citation["text"], prev["text"]) >= threshold
 

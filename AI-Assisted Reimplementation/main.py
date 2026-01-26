@@ -94,7 +94,40 @@ if __name__ == "__main__":
         "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/master/txt/Talmud/Bavli/Seder%20Nezikin/Bava%20Batra/Hebrew/Wikisource%20Talmud%20Bavli.txt",
         "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Arakhin/Hebrew/Wikisource%20Talmud%20Bavli.txt",
         "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Bekhorot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
-        
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Chullin/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Keritot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Meilah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Menachot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Tamid/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Temurah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Kodashim/Zevachim/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Beitzah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Chagigah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Eruvin/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Megillah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Moed%20Katan/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Pesachim/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Rosh%20Hashanah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Shabbat/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Sukkah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Taanit/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Moed/Yoma/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nashim/Gittin/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nashim/Ketubot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nashim/Kiddushin/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nashim/Nazir/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nashim/Nedarim/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nashim/Sotah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nashim/Yevamot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nezikin/Avodah%20Zarah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nezikin/Bava%20Kamma/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nezikin/Bava%20Metzia/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nezikin/Horayot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nezikin/Makkot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nezikin/Sanhedrin/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Nezikin/Shevuot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Tahorot/Niddah/Hebrew/Wikisource%20Talmud%20Bavli.txt",
+        "https://raw.githubusercontent.com/Sefaria/Sefaria-Export/refs/heads/master/txt/Talmud/Bavli/Seder%20Zeraim/Berakhot/Hebrew/Wikisource%20Talmud%20Bavli.txt",
     ]
 
     manager = process_urls(urls)
@@ -114,7 +147,7 @@ if __name__ == "__main__":
     mishna_by_id = {m["id"]: m for m in manager.mishnayot}
     citation_by_id = {c["id"]: c for c in manager.citations}
 
-    for group in groups[:5]:
+    for group in groups:
        first = citation_by_id[group[0]]
        mishna_id = first["matched_mishna_id"]
        m = mishna_by_id[mishna_id]
@@ -123,7 +156,7 @@ if __name__ == "__main__":
        print(f"Masechet: {m['masechet']}")
        print("Mishna:")
        print(f"Daf {m['daf']}")
-       print(m["text"])
+       #print(m["text"])
 
        for i, cid in enumerate(group, start=1):
          c = citation_by_id[cid]
