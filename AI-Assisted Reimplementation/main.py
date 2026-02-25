@@ -146,7 +146,7 @@ if __name__ == "__main__":
 # lookup מהיר
     mishna_by_id = {m["id"]: m for m in manager.mishnayot}
     citation_by_id = {c["id"]: c for c in manager.citations}
-
+    counter=0;
     for group in groups:
        first = citation_by_id[group[0]]
        mishna_id = first["matched_mishna_id"]
@@ -154,13 +154,16 @@ if __name__ == "__main__":
 
        print("\n" + "="*60)
        print(f"Masechet: {m['masechet']}")
-       print("Mishna:")
-       print(f"Daf {m['daf']}")
+       #print("Mishna:")
+       #print(f"Daf {m['daf']}")
        #print(m["text"])
 
        for i, cid in enumerate(group, start=1):
          c = citation_by_id[cid]
          print(f"\nCitation {i}:")
          print(f"{c['text']}   Daf {c['daf']}")
+         counter = counter+1
+    print(counter)
+       
 
 

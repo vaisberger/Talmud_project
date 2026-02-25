@@ -59,7 +59,8 @@ def extract_mishnayot_and_citations(text: str):
         # GEMARA + CITATIONS
         # -------------------
         if line.startswith("<big><strong>גמ׳</strong></big>"):
-            gemara_lines = []
+            first = line.replace("<big><strong>גמ׳</strong></big>", "").strip()
+            gemara_lines = [first] if first else []
             j = i + 1
 
             while j < len(lines):
